@@ -1,0 +1,206 @@
+# ---- This is <S1_training_mask.py> ----
+
+"""
+Convert training json file to training mask.
+  - Feature extraction (HH, HV)
+  - Meta data extraction (IA, swath, lat, lon)
+"""
+
+import pathlib
+
+from loguru import logger
+
+import numpy as np
+import matplotlib.pyplot as plt
+from osgeo import gdal
+
+import labelme_utils.json_conversion as lm_json
+
+from config.load_config import *
+
+# --------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------- #
+
+# S1 scene to process
+S1_base = "S1A_EW_GRDM_1SDH_20250824T135254_20250824T135337_060678_078CDC_E5C7"
+S1_base = "S1A_EW_GRDM_1SDH_20251006T134447_20251006T134523_061305_07A5F3_CC49"
+S1_base = "S1A_EW_GRDM_1SDH_20251009T140915_20251009T141007_061349_07A7BD_2EE0"
+
+S1_base = "S1A_EW_GRDM_1SDH_20251021T140915_20251021T141006_061524_07AEC5_98AC"
+
+S1_base = "S1A_EW_GRDM_1SDH_20250807T134446_20250807T134522_060430_078315_2E29"
+
+# Set S1 processing parameters
+ML              = '5x5'
+loglevel        = 'INFO'
+overwrite       = True
+training_format = "ENVI"
+
+# path to labels file
+labels_path = WORK_DIR / "config" / "labels.txt"
+
+class_colors = [
+    [0.0,0.0,1.0],
+    [0.0,0.5,0.8],
+    [1.0,1.0,0.0],
+    [0.7,0.7,0.0],
+    [1.0,1.0,1.0],
+    [0.0,1.0,0.0],
+    [1.0,1.0,1.0]
+]
+
+# --------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------- #
+
+logger.debug(f"DATA_DIR:    {DATA_DIR}")
+logger.debug(f"SAT_DIR:     {SAT_DIR}")
+logger.debug(f"IN_SITU_DIR: {IN_SITU_DIR}")
+logger.debug(f"MISC_DIR:    {MISC_DIR}")
+logger.debug(f"S1_DIR:      {S1_DIR}")
+logger.debug(f"S2_DIR:      {S2_DIR}")
+logger.debug(f"OSISAF_DIR:  {OSISAF_DIR}")
+logger.debug(f"S1_L1_DIR:   {S1_L1_DIR}")
+logger.debug(f"S1_FEAT_DIR: {S1_FEAT_DIR}")
+logger.debug(f"S1_GEO_DIR:  {S1_GEO_DIR}")
+
+# --------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------- #
+
+# RGB and training folder for ML setting
+rgb_folder      = S1_RGB_DIR / f"ML_{ML}"
+training_folder = S1_TRAIN_DIR / f"ML_{ML}"
+training_folder.mkdir(parents=True, exist_ok=True)
+
+# Build full paths to json and training mask
+json_path      = rgb_folder / f"{S1_base}_rgb.json"
+if training_format == "ENVI":
+    training_suffix = "img"
+elif training_format == "GTiff":
+    training_suffix = "tiff"
+training_path = training_folder / f"{S1_base}_rgb_training_mask.{training_suffix}"
+
+if not json_path.is_file():
+    logger.error(f"Could not find json_path: {json_path}")
+
+else:
+
+    logger.info(f"Processing json_path: {json_path}")
+
+    lm_json.convert_json_file_2_mask(
+        json_path,
+        labels_path,
+        training_folder,
+        output_format = training_format,
+        overwrite = overwrite,
+        loglevel = loglevel,
+    )
+
+# -------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------- #
+
+# Load training mask and data
+training_mask = gdal.Open(training_path).ReadAsArray()
+swath_mask    = gdal.Open(S1_FEAT_DIR / f"ML_{ML}" / f"{S1_base}" / "swath_mask.img").ReadAsArray()
+IA            = gdal.Open(S1_FEAT_DIR / f"ML_{ML}" / f"{S1_base}" / "IA.img").ReadAsArray()
+HH            = gdal.Open(S1_FEAT_DIR / f"ML_{ML}" / f"{S1_base}" / "Sigma0_HH_dB.img").ReadAsArray()
+HV            = gdal.Open(S1_FEAT_DIR / f"ML_{ML}" / f"{S1_base}" / "Sigma0_HV_dB.img").ReadAsArray()
+
+# Extract training data
+HH_train = HH[training_mask!=0]
+HV_train = HV[training_mask!=0]
+IA_train = IA[training_mask!=0]
+sm_train = swath_mask[training_mask!=0]
+y_train  = training_mask[training_mask!=0]
+
+# Get min and max training IA for linear fit
+IA_train_min  = int(np.floor(IA_train.min()))
+IA_train_max  = int(np.ceil(IA_train.max()))
+IA_linear_fit = np.linspace(IA_train_min, IA_train_max, IA_train_max-IA_train_min+1)
+
+# Get unique class labels
+unique_classes = np.unique(y_train)
+
+# -------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------- #
+
+sub = 5
+
+fig, axes = plt.subplots(2,2,sharex=True, sharey=True)
+axes = axes.ravel()
+axes[0].imshow(HH[::sub,::sub], vmin=-30, vmax=-5, cmap="gray")
+axes[1].imshow(HV[::sub,::sub], vmin=-35, vmax=-10, cmap="gray")
+axes[2].imshow(training_mask[::sub,::sub])
+axes[3].imshow(swath_mask[::sub,::sub])
+
+# -------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------- #
+
+fig, axes = plt.subplots(1,2)
+axes = axes.ravel()
+for cl in unique_classes:
+    axes[0].plot(IA_train[y_train==cl], HH_train[y_train==cl], ".", color=class_colors[cl-1])
+    axes[1].plot(IA_train[y_train==cl], HV_train[y_train==cl], ".", color=class_colors[cl-1])
+
+
+plt.show()
+
+# -------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------- #
+
+import GLIA_classifier.gaussian_linear_IA_classifier as GLIA
+
+X_train = np.stack((HH_train, HV_train),1)
+
+clf1 = GLIA.gaussian_clf()
+clf2 = GLIA.GLIA_clf()
+
+clf1.fit(X_train, y_train)
+clf2.fit(X_train, y_train, IA_train)
+
+
+
+fig, axes = plt.subplots(1,2)
+axes = axes.ravel()
+for cl in unique_classes:
+    axes[0].plot(IA_train[y_train==cl], HH_train[y_train==cl], ".", color=class_colors[cl-1])
+    axes[1].plot(IA_train[y_train==cl], HV_train[y_train==cl], ".", color=class_colors[cl-1])
+    HH_linear_fit = clf2.a[cl-1,0] + clf2.b[cl-1,0] * IA_linear_fit
+    HV_linear_fit = clf2.a[cl-1,1] + clf2.b[cl-1,1] * IA_linear_fit
+    axes[0].plot(IA_linear_fit, HH_linear_fit, color=class_colors[cl-1])
+    axes[1].plot(IA_linear_fit, HV_linear_fit, color=class_colors[cl-1])
+
+plt.show()
+
+
+
+
+
+# Stack full iamge data to feature vector X
+X_vec = np.stack((HH.ravel(), HV.ravel()),1)
+IA_vec = IA.ravel()
+
+y_pred1, p1 = clf1.predict(X_vec)
+y_pred2, p2 = clf2.predict(X_vec, IA_vec)
+
+y_pred_img1 = y_pred1.reshape(HH.shape)
+y_pred_img2 = y_pred2.reshape(HH.shape)
+
+y_pred_img1[swath_mask==0] = 0
+y_pred_img2[swath_mask==0] = 0
+
+
+
+sub = 2
+
+fig, axes = plt.subplots(2,2,sharex=True, sharey=True)
+axes = axes.ravel()
+axes[0].imshow(HH[::sub,::sub], vmin=-30, vmax=-5, cmap="gray")
+axes[1].imshow(HV[::sub,::sub], vmin=-35, vmax=-10, cmap="gray")
+axes[2].imshow(y_pred_img1[::sub,::sub])
+axes[3].imshow(y_pred_img2[::sub,::sub])
+
+
+# -------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------- #
+
+# ---- End of <S1_training_mask.py> ----
