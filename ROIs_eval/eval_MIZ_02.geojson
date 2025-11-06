@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "eval_MIZ_02",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::3031" } },
+"features": [
+{ "type": "Feature", "properties": { }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 3240000, 380000 ], [ 3240000, 280000 ], [ 3340000, 280000 ], [ 3340000, 380000 ], [ 3240000, 380000 ] ] ] } }
+]
+}
