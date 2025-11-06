@@ -1,7 +1,7 @@
-# ---- This is <S1_preprocess_single_image.py> ----
+# ---- This is <S1_preprocess_image.py> ----
 
 """
-Pre-process single S1 input image.
+Pre-process S1 input image.
 Folder structure is read from config folder.
 
     Default feature extraction: Sigma0_HH_dB, Sigma0_HV_dB, IA, swath_mask
@@ -42,12 +42,7 @@ def main():
     p.add_argument("-get_landmask", action = "store_true", help = "extract landmask")
     p.add_argument("-make_RGB", action = "store_true", help = "make RGB image")
     p.add_argument("-overwrite", action = "store_true", help = "overwrite existing files")
-    p.add_argument(
-        '-loglevel',
-        choices = ["TRACE", "DEBUG", "INFO", "SUCCESS" "WARNING", "ERROR", "CRITICAL"],
-        default = 'INFO',
-        help = 'loglevel setting (default=INFO)',
-    )
+    p.add_argument('-loglevel', choices = ["TRACE", "DEBUG", "INFO", "SUCCESS" "WARNING", "ERROR", "CRITICAL"], default = "INFO", help = "loglevel setting (default=INFO)")
 
     args = p.parse_args()
 
@@ -163,6 +158,8 @@ def main():
 
 # --------------------------------------------------------------------------- #
 
+    # Make RGB for labelme
+
     if make_RGB:
 
         # Full path to RGB output file
@@ -202,15 +199,11 @@ def main():
 
 # --------------------------------------------------------------------------- #
 # --------------------------------------------------------------------------- #
-# --------------------------------------------------------------------------- #
-# --------------------------------------------------------------------------- #
 
 if __name__ == "__main__":
     main()
     
 # --------------------------------------------------------------------------- #
 # --------------------------------------------------------------------------- #
-# -------------------------------------------------------------------------- #
-# -------------------------------------------------------------------------- #
 
-# ---- End of <S1_preprocess_single_image.py> ----
+# ---- End of <S1_preprocess_image.py> ----

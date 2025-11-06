@@ -1,12 +1,14 @@
 #!/bin/bash
 
-img_list="config/S1_image_list_test.txt"
+img_list="config/S1_image_list.txt"
+labels_file="config/labels.txt"
 n_img=`cat ${img_list} | wc -l`
 counter=0
 
 echo " "
-echo "Pre-processing all scenes from image list"
+echo "Converting json to training masks for all scenes from image list"
 echo "Image list has ${n_img} entries"
+
 
 for f in `cat ${img_list}`; do
 
@@ -18,6 +20,6 @@ for f in `cat ${img_list}`; do
     echo "Processing ${f}"
     echo " "
 
-    conda run -n S1_processing python S1_preprocess_image.py ${f}
+    conda run -n LABELME python S1_convert_image_json_2_training_mask.py ${f} ${labels_file}
 
 done 
