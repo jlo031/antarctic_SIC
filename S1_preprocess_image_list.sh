@@ -1,10 +1,21 @@
 #!/bin/bash
-for f in `cat S1_image_list`; do
+
+img_list="S1_image_list_test"
+n_img=`cat ${img_list} | wc -l`
+counter=0
+
+echo "Image list has ${n_img} entries"
+
+for f in `cat ${img_list}`; do
+
+    # Increase counter
+    let counter+=1
 
     echo " "
+    echo "Processing image ${counter}/${n_img} "
     echo "Processing ${f}"
     echo " "
 
-    conda run -n S1_processing python S1_preprocess_single_image.py $f
+    ##conda run -n S1_processing python S1_preprocess_single_image.py $f
 
 done 
