@@ -1,5 +1,5 @@
 {
-    "WORK_DIR": "/home/581/jl0818/work/SIC_comparison",
+    "WORK_DIR": "/home/581/jl0818/work/antarctic_SIC",
     "DATA_DIR": "/g/data/jk72/jl0818/DATA/SIC_comparison",
     "sub_dirs": {
         "satellite_data": "satellite_data",
