@@ -11,17 +11,24 @@ Except for *labelme*, most packages can be installed in the same environment. Fo
 
 ## SAR workflow
 
+### (0) Set up configuration
+Edit *config.json* in the *config* folder for your system.
+Unless you know exactly what you are doing, it is recommended to only adjust the "WORK_DIR" and "DATA_DIR" variables.
+Normally, you do not need to edit *load_config.py*.
+
+
 ### (1) Download images over selected test sites and time periods:
 Requirements: https://github.com/jlo031/CDSE
 
 *S1_query_and_download.py*
 
+Define the time period for each test site directly in the script.
+Run to find and dowload S1 products into the *S1_L1_DIR*.
+
+
 ### (2) Pre-process all S1 images in L1_DIR:
 Requirements: https://github.com/jlo031/S1_processing
 
-- extract features
-- make RGBs for labelme
-- 
 *S1_preprocess_image.py*
 *S1_preprocess_image_list.sh (for batch processing)*
 
@@ -35,3 +42,5 @@ Requirements: https://github.com/jlo031/labelme_utils
 Requirements: https://github.com/jlo031/GLIA
 
 *S1_train_and_classify_image.py*
+
+! CURRENTLY IN DEVELOPMENT ! 
