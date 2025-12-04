@@ -1,5 +1,12 @@
 # antarctic_SIC
-Cripts and workflow for comparison of Antarctic SIC from PM and SAR.
+Scripts and workflow for comparison of Antarctic SIC from PM and SAR.
+
+## Requirements
+Working python (anaconda/miniconda) and SNAP installation.
+Package requirements for each processing step are listed below.
+Follow installation guides provided in the individual packages.
+
+Except for *labelme*, most packages can be installed in the same environment. Follow installation guides 
 
 
 ## SAR workflow
