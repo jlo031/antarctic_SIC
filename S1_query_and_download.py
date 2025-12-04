@@ -39,6 +39,7 @@ logger.debug(f"S1_GEO_DIR:  {S1_GEO_DIR}")
 # --------------------------------------------------------------------------- #
 
 # Set search parameters
+# Adjust time period depending on test site
 sensor       = 'Sentinel-1'
 start_date   = '2025-08-01'
 end_date     = '2025-10-31'
