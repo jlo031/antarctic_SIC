@@ -14,6 +14,8 @@ from osgeo import gdal
 
 import labelme_utils.json_conversion as lm_json
 
+import GLIA_classifier.gaussian_linear_IA_classifier as GLIA
+
 from config.load_config import *
 
 # --------------------------------------------------------------------------- #
@@ -202,7 +204,7 @@ plt.show()
 # -------------------------------------------------------------------------- #
 # -------------------------------------------------------------------------- #
 
-import GLIA_classifier.gaussian_linear_IA_classifier as GLIA
+
 
 X_train = np.stack((HH_train, HV_train),1)
 
