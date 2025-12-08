@@ -1,46 +1,98 @@
-# antarctic_SIC
-Scripts and workflow for comparison of Antarctic SIC from PM and SAR.
+# 🧊 `antarctic_SIC`: Scripts & Workflow
 
-## Requirements
-Working python (anaconda/miniconda) and SNAP installation.
-Package requirements for each processing step are listed below.
-Follow installation guides provided in the individual packages.
+Scripts and workflow for comparison of **Antarctic Sea Ice Concentration (SIC)** data derived from **Passive Microwave (PM)** and **Synthetic Aperture Radar (SAR)** imagery.
 
-Except for *labelme*, most packages can be installed in the same environment. Follow installation guides 
+---
 
+## 🛠️ Requirements & Installation
 
-## SAR workflow
+For the full workflow, you require a working **Python** (Anaconda/Miniconda) and **SNAP** installation.
 
-### (0) Set up configuration
-Edit *config.json* in the *config* folder for your system.
-Unless you know exactly what you are doing, it is recommended to only adjust the "WORK_DIR" and "DATA_DIR" variables.
-Normally, you do not need to edit *load_config.py*.
+### Python Environment Setup
 
+Specific package requirements are listed for each step in the workflow. Except for `labelme`, most packages can be installed within a single environment.
 
-### (1) Download images over selected test sites and time periods:
-Requirements: https://github.com/jlo031/CDSE
+You can follow the individual installation guides on the GitHub pages for each package, or use the following steps to install the environment:
 
-*S1_query_and_download.py*
+1.  **Create and activate the environment:**
+    ```bash
+    # Create new environment with gdal
+    conda create -y -n SAR_PM_SIC gdal
 
-Define the time period for each test site directly in the script.
-Run to find and dowload S1 products into the *S1_L1_DIR*.
+    # Activate the environment
+    conda activate SAR_PM_SIC
+    ```
 
+2.  **Install required packages from conda-forge:**
+    ```bash
+    conda install -y -c conda-forge loguru requests lxml geojson geomet python-dotenv scipy scikit-learn pillow
+    ```
 
-### (2) Pre-process all S1 images in L1_DIR:
-Requirements: https://github.com/jlo031/S1_processing
+3.  **Install personal packages from GitHub via pip:**
+    ```bash
+    pip install git+[https://github.com/jlo031/CDSE](https://github.com/jlo031/CDSE)
+    pip install git+[https://github.com/jlo031/GLIA](https://github.com/jlo031/GLIA)
+    pip install git+[https://github.com/jlo031/S1_processing.git](https://github.com/jlo031/S1_processing.git)
+    ```
 
-*S1_preprocess_image.py*
-*S1_preprocess_image_list.sh (for batch processing)*
+### Environment Variables (`.env` file)
 
-### (3) Label ice types and open water for each image:
-Requirements: https://github.com/jlo031/labelme_utils
+The download option of the `CDSE` package and the SNAP `gpt` call of the `S1_processing` package require **environment variables**.
 
-*S1_convert_image_json_2_training_mask.py*
-*S1_convert_image_list_json_2_training_mask.py* (for batch processing)
+Store these variables in a local `.env` file in your working directory. The file contents should look like this:
 
-### (4) Train and classify images:
-Requirements: https://github.com/jlo031/GLIA
+```dotenv
+CDSE_USER="your-CDSE-user-name"
+CDSE_PASSWORD="your-CDSE-password"
+GPT="/path/to/your/snap/bin/gpt"
+```
 
-*S1_train_and_classify_image.py*
+---
 
-! CURRENTLY IN DEVELOPMENT ! 
+## ⚙️ Configuration Setup
+
+The general folder structure is defined in the **`config.json`** file and read using `load_config.py`.
+
+> * You should only need to edit the **`config.json`**.
+> * **Recommendation:** Only adjust the `"WORK_DIR"` and `"DATA_DIR"` variables and leave the dependent folder structure untouched, unless you know exactly what you are doing.
+
+---
+
+## 🚀 SAR Workflow Steps
+
+### (1) Download S1 Images
+
+This script finds and downloads Sentinel-1 (S1) products over selected test sites and time periods, placing them into the configured `S1_L1_DIR`.
+
+* **Script:** `S1_query_and_download.py`
+* **Action:** Define/adjust the time period for each test site **directly in the script**.
+* **Requirement:** [CDSE](https://github.com/jlo031/CDSE)
+
+### (2) Pre-process S1 Images
+
+Pre-process all S1 images currently stored in the `S1_L1_DIR`.
+
+* **Script (Single Image):** `S1_preprocess_image.py`
+* **Script (Batch Processing):** `S1_preprocess_image_list.sh`
+* **Requirement:** [S1\_processing](https://github.com/jlo031/S1_processing)
+
+### (3) Label Ice Types
+
+Label ice types (ice and water) in individual images.
+
+* **Script:** `label_ice_types.sh`
+* **Requirement:** [labelme\_utils](https://github.com/jlo031/labelme_utils)
+
+### (4) Convert Label Files (json) to Label Masks
+
+Convert the labels from the previous steps to full-sized label masks.
+
+* **Script (Single Image):** `S1_convert_image_json_2_training_mask.py`
+* **Script (Batch Processing):** `S1_convert_image_list_json_2_training_mask.py`
+* **Requirement:** [labelme\_utils](https://github.com/jlo031/labelme_utils)
+
+### (5) Train and classify images:
+
+* **Script S1_train_and_classify_image.py**
+* **! CURRENTLY IN DEVELOPMENT !**
+* **Requirement: https://github.com/jlo031/GLIA**
