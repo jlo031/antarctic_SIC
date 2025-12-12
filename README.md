@@ -25,7 +25,7 @@ You can follow the individual installation guides on the GitHub pages for each p
 
 2.  **Install required packages from conda-forge:**
     ```bash
-    conda install -y -c conda-forge loguru requests lxml geojson geomet python-dotenv scipy scikit-learn pillow
+    conda install -y -c conda-forge loguru requests lxml geojson geomet python-dotenv scipy scikit-learn pillow matplotlib
     ```
 
 3.  **Install personal packages from GitHub via pip:**
