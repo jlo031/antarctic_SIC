@@ -82,6 +82,7 @@ Label ice types (ice and water) in individual images.
 
 * **Script:** `label_ice_types.sh`
 * **Requirement:** [labelme\_utils](https://github.com/jlo031/labelme_utils)
+* ! NOT IMPLEMENTED YET !
 
 ### (4) Convert Label Files (json) to Label Masks
 

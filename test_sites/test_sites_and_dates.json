@@ -3,18 +3,24 @@
         "geojson": "test_site_1.geojson",
         "geojson_epsg4326": "test_site_1_epsg4326.geojson",
 	"start_date": "2025-08-01",
-        "end_date": "2025-11-01"
+        "end_date": "2025-11-01",
+	"start_time": "00:00:00",
+        "end_time": "00:00:00"
     },
     "site_2": {
         "geojson": "test_site_2.geojson",
         "geojson_epsg4326": "test_site_2_epsg4326.geojson",
         "start_date": "2025-03-01",
-        "end_date": "2025-05-01"
+        "end_date": "2025-05-01",
+	"start_time": "00:00:00",
+        "end_time": "00:00:00"
     },
     "site_3": {
         "geojson": "test_site_3.geojson",
-        "geojson_epsg_4326": "test_site_3_epsg4326.geojson",
+        "geojson_epsg4326": "test_site_3_epsg4326.geojson",
         "start_date": "2025-03-01",
-        "end_date": "2025-05-01"
+        "end_date": "2025-05-01",
+	"start_time": "00:00:00",
+        "end_time": "00:00:00"
     }
 }
