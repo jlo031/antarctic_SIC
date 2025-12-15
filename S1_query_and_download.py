@@ -172,7 +172,7 @@ if download_all_dual_pol:
                 logger.info(f"{p['Name']}")
                 logger.info("    Downloading this product")
         
-                ##CDSE_sd.download_product_from_cdse(p, S1_L1_DIR, username, password)
+                CDSE_sd.download_product_from_cdse(p, S1_L1_DIR, username, password)
 
 # --------------------------------------------------------------------------- #
 
