@@ -5,7 +5,7 @@ n_img=`cat ${img_list} | wc -l`
 counter=0
 
 echo " "
-echo "Pre-processing all scenes from image list"
+echo "Geocoding all scenes from image list"
 echo "Image list has ${n_img} entries"
 
 for f in `cat ${img_list}`; do
@@ -18,6 +18,6 @@ for f in `cat ${img_list}`; do
     echo "Processing ${f}"
     echo " "
 
-    conda run -n SAR_PM_SIC python S1_preprocess_image.py ${f} -make_RGB
+    conda run -n SAR_PM_SIC python S1_geocode_image.py ${f} -make_geo_RGB
 
 done 

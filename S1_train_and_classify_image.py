@@ -4,6 +4,7 @@
 Extract training data, train classifier, and classify image.
 """
 
+import sys
 import pathlib
 
 from loguru import logger
@@ -12,7 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from osgeo import gdal
 
-import labelme_utils.json_conversion as lm_json
+#import labelme_utils.json_conversion as lm_json
 
 import GLIA_classifier.gaussian_linear_IA_classifier as GLIA
 
@@ -166,6 +167,7 @@ S1_base = "S1A_EW_GRDM_1SDH_20251021T140915_20251021T141006_061524_07AEC5_98AC"
 S1_base = "S1A_EW_GRDM_1SDH_20251025T133614_20251025T133711_061582_07B115_0053"
 S1_base = "S1A_EW_GRDM_1SDH_20251028T140036_20251028T140136_061626_07B2E1_76DA"
 S1_base = "S1A_EW_GRDM_1SDH_20251030T134446_20251030T134523_061655_07B407_92A4"
+S1_base = "S1A_EW_GRDM_1SDH_20250301T145621_20250301T145726_058112_072D50_F0F9"
 
 # Set S1 processing parameters
 ML              = '5x5'
