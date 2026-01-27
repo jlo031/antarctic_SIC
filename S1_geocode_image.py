@@ -175,6 +175,7 @@ def main():
             input_tif_path1,
             input_tif_path2,
             output_tif_path,
+            no_data_value = 0,
             overwrite = overwrite,
             loglevel = loglevel,
         )

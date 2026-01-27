@@ -18,6 +18,6 @@ for f in `cat ${img_list}`; do
     echo "Processing ${f}"
     echo " "
 
-    conda run -n SAR_PM_SIC python S1_geocode_image.py ${f} -make_geo_RGB
+    conda run -n SAR_PM_SIC python S1_geocode_image.py ${f} -make_geo_RGB -pixel_spacing 200
 
 done 
