@@ -32,7 +32,8 @@ You can follow the individual installation guides on the GitHub pages for each p
     ```bash
     pip install git+[https://github.com/jlo031/CDSE](https://github.com/jlo031/CDSE)
     pip install git+[https://github.com/jlo031/GLIA](https://github.com/jlo031/GLIA)
-    pip install git+[https://github.com/jlo031/S1_processing.git](https://github.com/jlo031/S1_processing.git)
+    pip install git+[https://github.com/jlo031/S1_processing](https://github.com/jlo031/S1_processing)
+    pip install git+[https://github.com/jlo031/geocoding](https://github.com/jlo031/geocoding)
     ```
 
 ### Environment Variables (`.env` file)
