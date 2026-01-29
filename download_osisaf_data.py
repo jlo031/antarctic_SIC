@@ -18,7 +18,7 @@ from config.load_config import *
 # search parameters
 year_list  = [2025]
 month_list = [1,2,3,4,5,6,7,8,9,10,11,12]
-month_list = [10,11,12]
+month_list = [11,12]
 hemisphere = 'SH'
 sensor     = 'amsr2'
 

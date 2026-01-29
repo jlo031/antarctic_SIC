@@ -1,6 +1,6 @@
 #!/bin/bash
 
-img_list="config/full_L1_image_list.txt"
+img_list="image_lists/test_site_1_full_image_list_2025.txt"
 n_img=`cat ${img_list} | wc -l`
 counter=0
 
@@ -18,6 +18,6 @@ for f in `cat ${img_list}`; do
     echo "Processing ${f}"
     echo " "
 
-    conda run -n SAR_PM_SIC python S1_preprocess_image.py ${f} -make_RGB
+    conda run -n SAR_PM_SIC python S1_preprocess_image.py ${f} -make_RGB -get_lat_lon
 
 done 

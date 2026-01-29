@@ -3,6 +3,6 @@
 "name": "",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::3031" } },
 "features": [
-{ "type": "Feature", "properties": { }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 3200000, 500000 ], [ 3200000, 100000 ], [ 3600000, 100000 ], [ 3600000, 500000 ], [ 3200000, 500000 ] ] ] } }
+{ "type": "Feature", "properties": { }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 2850000, 300000 ], [ 2850000, -100000 ], [ 3250000, -100000 ], [ 3250000, 300000 ], [ 2850000, 300000 ] ] ] } }
 ]
 }

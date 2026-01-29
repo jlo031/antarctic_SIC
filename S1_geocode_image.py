@@ -44,6 +44,7 @@ def main():
     p.add_argument("-make_geo_RGB", action = "store_true", help = "make geocoded RGB image")
     p.add_argument("-target_epsg", default="3031", help = "set target epsg code (default=3031)")
     p.add_argument("-pixel_spacing", default="100", help = "set target pixel spacing (default=100)")
+    p.add_argument("-make_geo_RGB_only", action = "store_true", help = "remove single channel geocoded images and keep only stacked RGB")
     p.add_argument("-overwrite", action = "store_true", help = "overwrite existing files")
     p.add_argument('-loglevel', choices = ["TRACE", "DEBUG", "INFO", "SUCCESS" "WARNING", "ERROR", "CRITICAL"], default = "INFO", help = "loglevel setting (default=INFO)")
 
@@ -62,13 +63,14 @@ def main():
     logger.debug(f"args: {args}")
 
     # Parse inputs
-    S1_base       = args.S1_base
-    ML            = args.ML
-    make_geo_RGB  = args.make_geo_RGB
-    target_epsg   = args.target_epsg
-    pixel_spacing = args.pixel_spacing
-    overwrite     = args.overwrite
-    loglevel      = args.loglevel
+    S1_base           = args.S1_base
+    ML                = args.ML
+    make_geo_RGB      = args.make_geo_RGB
+    target_epsg       = args.target_epsg
+    pixel_spacing     = args.pixel_spacing
+    make_geo_RGB_only = args.make_geo_RGB_only
+    overwrite         = args.overwrite
+    loglevel          = args.loglevel
 
     logger.info(f"Processing image:     {S1_base}")
 
@@ -110,6 +112,25 @@ def main():
 # --------------------------------------------------------------------------- #
 # --------------------------------------------------------------------------- #
 
+    if make_geo_RGB_only:
+
+        logger.info("Geocoding input image, only creating geocoded stacked intensities")
+
+        # Path to final geocoded RGB file
+        output_tif_path = S1_GEO_DIR / f"{S1_base}__intensities__epsg_{target_epsg}__pixelspacing_{pixel_spacing}.tiff"
+
+        logger.debug(f"output_tif_path: {output_tif_path}")
+
+        if output_tif_path.is_file() and not overwrite:
+            logger.info(f"Geocoded RGB file already exists: {output_tif_path}")
+            return
+
+        else:
+            logger.info("Preparing to geocode HH and HV, stack, clean up")
+
+# --------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------- #
+
     # Get lat/lon if needed
 
     logger.info("Computing lat/lon bands for GCP extraction")
@@ -125,7 +146,6 @@ def main():
 # --------------------------------------------------------------------------- #
 
     features_2_geocode = [ 'Sigma0_HH_dB', 'Sigma0_HV_dB' ]
-
 
     for feature_2_geocode in features_2_geocode:
 
@@ -163,7 +183,7 @@ def main():
 
     # Make geocoded RGB
 
-    if make_geo_RGB:
+    if make_geo_RGB or make_geo_RGB_only:
 
         logger.info("Stacking HH and HV to geocoded RGB for QGIS")
 
@@ -179,6 +199,12 @@ def main():
             overwrite = overwrite,
             loglevel = loglevel,
         )
+
+        if make_geo_RGB_only:
+
+            logger.info("Cleaning up: Deleting geocoded HH and HV files")
+            input_tif_path1.unlink()
+            input_tif_path2.unlink()
 
 # --------------------------------------------------------------------------- #
 # --------------------------------------------------------------------------- #

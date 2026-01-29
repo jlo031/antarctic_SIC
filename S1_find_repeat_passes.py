@@ -42,8 +42,14 @@ loglevel = "DEBUG"
 
 # Select test site and provide example image for relative orbit
 test_site = 'site_1'
-example_image = "S1A_EW_GRDM_1SDH_20250807T134346_20250807T134446_060430_078315_C255"
-##example_image = "S1A_EW_GRDM_1SDH_20250812T135154_20250812T135254_060503_0785F9_877B"
+example_image = "S1A_EW_GRDM_1SDH_20250807T134346_20250807T134446_060430_078315_C255"    # DONE
+##example_image = "S1A_EW_GRDM_1SDH_20250812T135154_20250812T135254_060503_0785F9_877B"    # DONE
+
+
+### Select test site and provide example image for relative orbit
+##test_site = 'site_2'
+##example_image = "S1A_EW_GRDM_1SDH_20250304T152136_20250304T152236_058156_072F25_3ECE"    #DONE
+##example_image = "S1A_EW_GRDM_1SDH_20250311T151330_20250311T151430_058258_07333C_5635"
 
 # --------------------------------------------------------------------------- #
 # --------------------------------------------------------------------------- #
@@ -94,7 +100,16 @@ logger.info(f"Relative orbit number for given example image is: {relative_orbit}
 # QUERY CDSE FOR REPEAT PASSES FOR ALL OF 2025
 
 logger.info(f'Processing test_site: {test_site}')
-roi_json_path = WORK_DIR / "test_sites" / test_site_dict[test_site]["geojson_epsg4326"]
+
+# Use any overlap for test site 1
+# Use only overlap with centroid for test site 2
+if test_site == "site_1":
+    roi_json_path = WORK_DIR / "test_sites" / test_site_dict[test_site]["centroid_geojson_epsg4326"]
+elif test_site == "site_2":
+    roi_json_path = WORK_DIR / "test_sites" / test_site_dict[test_site]["centroid_geojson_epsg4326"]
+else:
+    logger.warning("Implement test site!!")
+
 
 # hard-coded: search for S1 GRD data for repeat passes in all of 2025
 sensor           = "Sentinel-1"
@@ -150,7 +165,7 @@ for p in product_list:
         repeat_pass_list.append(f"{p['Name']}")
         logger.info("    Downloading this product")
         
-        ##CDSE_sd.download_product_from_cdse(p, S1_L1_DIR, username, password)
+        CDSE_sd.download_product_from_cdse(p, S1_L1_DIR, username, password)
 
 # --------------------------------------------------------------------------- #
 # --------------------------------------------------------------------------- #
@@ -159,7 +174,7 @@ for p in product_list:
 
 repeat_pass_list.sort()
 
-with open(f"test_site_1_orbit_{relative_orbit:03d}_image_list_2025.txt", "w") as f:
+with open(f"test_{test_site}_orbit_{relative_orbit:03d}_image_list_2025.txt", "w") as f:
     for item in repeat_pass_list:
         f.write(f"{item}\n")
 

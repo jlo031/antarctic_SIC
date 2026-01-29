@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "test_site_1_centroid",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::3031" } },
+"features": [
+{ "type": "Feature", "properties": { }, "geometry": { "type": "Point", "coordinates": [ 3050000.0, 100000.0 ] } }
+]
+}
