@@ -10,10 +10,10 @@ import sys
 
 from loguru import logger
 
-from shapely import wkt
-from shapely.geometry import shape
+##from shapely import wkt
+##from shapely.geometry import shape
 
-import numpy as np
+##import numpy as np
 
 import CDSE.utils as CDSE_utils
 import CDSE.json_utils as CDSE_json

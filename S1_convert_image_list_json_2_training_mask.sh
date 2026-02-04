@@ -1,6 +1,6 @@
 #!/bin/bash
 
-img_list="config/S1_image_list.txt"
+img_list="image_lists/test_site_1_full_image_list_2025.txt"
 labels_file="config/labels.txt"
 n_img=`cat ${img_list} | wc -l`
 counter=0
@@ -20,6 +20,6 @@ for f in `cat ${img_list}`; do
     echo "Processing ${f}"
     echo " "
 
-    conda run -n LABELME python S1_convert_image_json_2_training_mask.py ${f} ${labels_file}
+    conda run -n labelme python S1_convert_image_json_2_training_mask.py ${f} ${labels_file}
 
 done 

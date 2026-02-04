@@ -1,0 +1,21 @@
+{
+    "WORK_DIR": "/home/581/jl0818/work/antarctic_SIC",
+    "DATA_DIR": "/g/data/jk72/jl0818/DATA/SIC_comparison",
+    "sub_dirs": {
+        "satellite_data": "satellite_data",
+        "in_situ_data": "in_situ_data",
+        "misc": "misc",
+        "sat_data_subdirs": {
+            "S1": "Sentinel-1",
+            "S2": "Sentinel-2",
+            "OSISAF": "OSISAF",
+            "S1_subdirs": {
+                "L1": "L1",
+                "FEAT": "features",
+                "GEO": "geocoded",
+                "RGB": "RGB",
+                "TRAIN": "training"
+            }
+        }
+    }
+}
